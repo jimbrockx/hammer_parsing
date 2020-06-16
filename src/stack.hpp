@@ -15,7 +15,7 @@
 
 #define GLOBAL_STACK_INVALID  (GLOBAL_STACK_DEPTH+1)
 
-#define STACK_INVALID_DATA    0xFF
+#define STACK_INVALID_DATA    0x0
 
 typedef struct __attribute__((__packed__)) stack_datum_s
 {
@@ -43,6 +43,8 @@ static stack_datum_t global_stack[GLOBAL_STACK_DEPTH];
 
 #define GET_STACK_VALUE(off)   (global_stack[stack_ptr-off])
 
+#define CLEAR_STACK_TOP()      global_stack[stack_ptr].data = STACK_INVALID_DATA;
+
 
 #define SET_TOKEN(tok)         (global_stack[stack_ptr].tokens |= tok)
 
@@ -51,7 +53,10 @@ static stack_datum_t global_stack[GLOBAL_STACK_DEPTH];
 
 #define STACK_TRANSFORM(len, tok)  \
   stack_ptr -= (len-1); \
-  global_stack[stack_ptr].tokens = tok; \
-  global_stack[stack_ptr].data   = STACK_INVALID_DATA; \
+  global_stack[stack_ptr].data = global_stack[stack_ptr+(len-1)].data; \
+  global_stack[stack_ptr].tokens |= tok;
+  //global_stack[stack_ptr].data   = STACK_INVALID_DATA; \
+
+#define STACK_INVALIDATE() (global_stack[0x1] = (stack_datum_t){0x0, STACK_INVALID_DATA})
 
 #endif

@@ -18,13 +18,14 @@ static inline void check_charset(rule_t rule, stack_datum_t datum, bool* changed
 
   if ((rule.in_or_not) && found)
   {
-    //SET_TOKEN(rule->value.tokens);
-    STACK_TRANSFORM(0x1, rule.value.tokens);
-    (*changed) = true;
+    if (!CHECK_TOKEN(rule.value.tokens))
+    {
+      STACK_TRANSFORM(0x1, rule.value.tokens);
+      (*changed) = true;
+    }
   }
   if ((!rule.in_or_not) && (!found))
   {
-    //SET_TOKEN(rule->value.tokens);
     STACK_TRANSFORM(0x1, rule.value.tokens);
     (*changed) = true;
   }
@@ -38,7 +39,6 @@ static inline void check_choice(rule_t rule, stack_datum_t datum, bool* changed)
   {
     if (CHECK_TOKEN(rule.refs[idx].token))
     {
-      //SET_TOKEN(rule->value.tokens);
       STACK_TRANSFORM(0x1, rule.value.tokens);
       (*changed) = true;
       break;
@@ -82,53 +82,65 @@ static inline void check_sequence(rule_t rule, stack_datum_t datum, bool* change
   bool pass = true;
   int8_t stkoff = 0;
   int8_t streak = 0;
+  bool prev_start = true;
 
-  for (int8_t seqidx = (rule.len-1); seqidx >= 0; )
+  for ( int8_t start = (rule.len - 1); start >= 0; start-- )
   {
-    stack_datum_t cur_datum = GET_STACK_VALUE(stkoff);
-    rule_ref_t seq_ref = rule.refs[seqidx];
+    if (prev_start)
+    {
+      prev_start = rule.refs[start].optional;
+      stkoff = 0;
+      streak = 0;
+      pass = true;
 
-    // Check if current sequence token matches the current 
-    if (!(seq_ref.token & cur_datum.tokens))
-    {   
-      if (seq_ref.many)
+      for ( int8_t seqidx = start; seqidx >= 0; /* N/A */ )
       {
-        if (streak >= seq_ref.min)
-        {
-          streak = 0;
-          stkoff--;
+        stack_datum_t cur_datum = GET_STACK_VALUE(stkoff);
+        rule_ref_t seq_ref = rule.refs[seqidx];
+
+        // Check if current sequence token matches the current 
+        if (!(seq_ref.token & cur_datum.tokens))
+        {   
+          if (seq_ref.many)
+          {
+            if (streak >= seq_ref.min)
+            {
+              streak = 0;
+              stkoff--;
+            }
+            else
+            {
+              pass = false;
+              break;
+            }
+          }
+          else if (!seq_ref.optional)
+          {
+            pass = false;
+            break;
+          }
+          else
+          {
+            stkoff--;
+          }
+          seqidx--;
+          stkoff++;
         }
         else
         {
-          pass = false;
-          break;
-        }
-      }
-      else if (!seq_ref.optional)
-      {
-        pass = false;
-        break;
-      }
-      else
-      {
-        stkoff--;
-      }
-      seqidx--;
-      stkoff++;
-    }
-    else
-    {
-      if (seq_ref.many)
-      {
-        streak++;
-      }
-      else
-      {
-   	    seqidx--;
-      }
-      stkoff++;
-    }  
-  }
+          if (seq_ref.many)
+          {
+            streak++;
+          }
+          else
+          {
+       	    seqidx--;
+          }
+          stkoff++;
+        }  
+      } // for seqidx ...
+    } // if prev_start
+  } // for start ...
 
   if (pass)
   {
@@ -141,7 +153,6 @@ static inline void check_sequence(rule_t rule, stack_datum_t datum, bool* change
 
 static inline void check_continuation(rule_t rule, stack_datum_t datum, bool* changed)
 {
-  //rule_sequence_t sequence_rule = rule.ruleset.sequence;
   stack_datum_t cur_datum = GET_STACK_VALUE(0x0);
   stack_datum_t prev_datum = GET_STACK_VALUE(0x1);
   rule_ref_t seq_ref = rule.refs[rule.len-1];
@@ -150,7 +161,8 @@ static inline void check_continuation(rule_t rule, stack_datum_t datum, bool* ch
   {
     if ((seq_ref.many) && (seq_ref.token & cur_datum.tokens))
     {
-      STACK_POP( 0x1 );
+      //STACK_POP( 0x1 );
+      STACK_TRANSFORM(0x2, rule.value.tokens);
       (*changed) = true;
     }
   }
@@ -160,7 +172,6 @@ static inline void check_continuation(rule_t rule, stack_datum_t datum, bool* ch
 static inline void check_token(rule_t rule, stack_datum_t datum, bool* changed)
 {
   bool found = true;
-  //rule_token_t token_rule = rule.ruleset.token;
   int8_t stkoff = 0;
 
   if (GET_STACK_PTR() >= rule.len)
@@ -239,7 +250,7 @@ static inline void grammar_check( rule_t* grammar_in,
           check_token(grammar_in[idx], datum, changed);
           break;
         default:
-          //STACK_INVALIDATE();
+          STACK_INVALIDATE();
           break;
       }
     }
@@ -250,6 +261,7 @@ static inline void grammar_check( rule_t* grammar_in,
 
 void parse( axi_stream_t& data_in,
             rule_t grammar_in[MAX_GRAMMAR_DEPTH],
+            uint64_t final_flag,
             axi_valid_stream_t& valid_out )
 {
 #pragma HLS INTERFACE axis port=data_in
@@ -277,14 +289,14 @@ void parse( axi_stream_t& data_in,
       // Run rule checks
       grammar_check(grammar_in, &changed);
     }
+    //CLEAR_STACK_TOP();
 
     // End of stream, so calculate and write valid flag
     if (axis_chunk.last == 1)
     {
       reading = false;
-      if (
-           (GET_STACK_PTR() == 0x1)
-         )
+      if ( CHECK_TOKEN(final_flag) &&
+           (GET_STACK_PTR() == 0x1) )
       {
         valid_flag.data = true;
       }
