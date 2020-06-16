@@ -33,9 +33,9 @@ typedef ap_axis <1,0,0,0> axi_valid_bus_t;
 typedef hls::stream<axi_valid_bus_t> axi_valid_stream_t;
 
 
-void parse( axi_stream_t& data_in,
-            rule_t* grammar_in,
-            uint64_t final_flag,
-            axi_valid_stream_t& valid_out );
+void grammar_parser( axi_stream_t& data_in,
+                     rule_t* grammar_in,
+                     uint64_t final_flag,
+                     axi_valid_stream_t& valid_out );
 
 #endif

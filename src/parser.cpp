@@ -259,10 +259,10 @@ static inline void grammar_check( rule_t* grammar_in,
 }
 
 
-void parse( axi_stream_t& data_in,
-            rule_t grammar_in[MAX_GRAMMAR_DEPTH],
-            uint64_t final_flag,
-            axi_valid_stream_t& valid_out )
+void grammar_parser( axi_stream_t& data_in,
+                     rule_t grammar_in[MAX_GRAMMAR_DEPTH],
+                     uint64_t final_flag,
+                     axi_valid_stream_t& valid_out )
 {
 #pragma HLS INTERFACE axis port=data_in
 #pragma HLS INTERFACE bram port=grammar_in

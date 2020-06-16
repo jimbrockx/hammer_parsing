@@ -27,7 +27,7 @@ static int json_parser_parse(const uint8_t* str, int32_t strlen, uint64_t flag)
      data_in.write(cur_data);
   }
 
-  parse( data_in, grammar_in, flag, valid_out );
+  grammar_parser( data_in, grammar_in, flag, valid_out );
 
   bool valid = false;
   valid = valid_out.read().data.to_bool();
