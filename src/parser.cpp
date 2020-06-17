@@ -201,6 +201,7 @@ static inline void grammar_check( rule_t* grammar_in,
 {
   bool tmp_changed = false;
   (*changed) = false;
+  STACK_UPDATE_CLEAR()
 
   for (uint8_t idx = 0; idx < MAX_GRAMMAR_DEPTH; idx++)
   {
@@ -289,7 +290,6 @@ void grammar_parser( axi_stream_t& data_in,
       // Run rule checks
       grammar_check(grammar_in, &changed);
     }
-    //CLEAR_STACK_TOP();
 
     // End of stream, so calculate and write valid flag
     if (axis_chunk.last == 1)

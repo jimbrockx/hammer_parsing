@@ -47,24 +47,8 @@ static int json_parser_parse(const uint8_t* str, int32_t strlen, uint64_t flag)
 #define FAIL_ON_FAIL(call) if (call != 0) { return -1; }
 #define FAIL_ON_PASS(call) if (call != -1) { return -1; }
 
-/*
-static int test_json_string() {
-    int retval = json_parser_parse((const uint8_t*)"\"\"", 2);
-    if (retval == 0)
-    {
-      retval = json_parser_parse((const uint8_t*)"\"String\"", 8);
-      if (retval == 0)
-      {
-        retval = json_parser_parse((const uint8_t*)"\"String\\rwith control chars\"", 28);
-        if (retval == 0)
-        {
-          retval = json_parser_parse((const uint8_t*)"\"String\\r\\nwith control chars\"", 30);
-        }
-      }
-    }
-    return retval;
-}
 
+/*
 static int test_json_object() {
     int retval = json_parser_parse((const uint8_t*)"{}", 2);
     if (retval == 0)
@@ -127,51 +111,15 @@ static int test_json_fail()
 */
 
 
-#define GRAMMAR_RULE_WS               (0x1 << 0)
-#define GRAMMAR_RULE_LEFTSQUARE       (0x1 << 1)
-#define GRAMMAR_RULE_LEFTSQUARE_SEQ   (0x1 << 2)
-#define GRAMMAR_RULE_RIGHTSQUARE      (0x1 << 3)
-#define GRAMMAR_RULE_RIGHTSQUARE_SEQ  (0x1 << 4)
-#define GRAMMAR_RULE_LEFTCURLY        (0x1 << 5)
-#define GRAMMAR_RULE_LEFTCURLY_SEQ    (0x1 << 6)
-#define GRAMMAR_RULE_RIGHTCURLY       (0x1 << 7)
-#define GRAMMAR_RULE_RIGHTCURLY_SEQ   (0x1 << 8)
-#define GRAMMAR_RULE_COLON            (0x1 << 9)
-#define GRAMMAR_RULE_COLON_SEQ        (0x1 << 10)
-#define GRAMMAR_RULE_COMMA            (0x1 << 11)
-#define GRAMMAR_RULE_COMMA_SEQ        (0x1 << 12)
-#define GRAMMAR_RULE_LIT_TRUE         (0x1 << 13)
-#define GRAMMAR_RULE_LIT_FALSE        (0x1 << 14)
-#define GRAMMAR_RULE_LIT_NULL         (0x1 << 15)
-#define GRAMMAR_RULE_MINUS            (0x1 << 16)
-#define GRAMMAR_RULE_DOT              (0x1 << 17)
-#define GRAMMAR_RULE_DIGIT            (0x1 << 18)
-#define GRAMMAR_RULE_NON_ZERO_DIGIT   (0x1 << 19)
-#define GRAMMAR_RULE_ZERO             (0x1 << 20)
-#define GRAMMAR_RULE_LOWERE           (0x1 << 21)
-#define GRAMMAR_RULE_UPPERE           (0x1 << 22)
-#define GRAMMAR_RULE_EXP              (0x1 << 23)
-#define GRAMMAR_RULE_PLUS             (0x1 << 24)
-#define GRAMMAR_RULE_WHOLENUM_SEQ     (0x1 << 25)
-#define GRAMMAR_RULE_WHOLENUM         (0x1 << 26)
-#define GRAMMAR_RULE_DECIMAL_SEQ      (0x1 << 27)
-#define GRAMMAR_RULE_EXP_SIGN         (0x1 << 28)
-#define GRAMMAR_RULE_EXP_SEQ          (0x1 << 29)
-#define GRAMMAR_RULE_JSON_NUMBER      (0x1 << 30)
-
-
 static int test_json_ws()
 {
   int retval = 0;
+
   retval |= json_parser_parse((const uint8_t*)" ", 1, GRAMMAR_RULE_WS);
   retval |= json_parser_parse((const uint8_t*)"\n", 1, GRAMMAR_RULE_WS);
   retval |= json_parser_parse((const uint8_t*)"\r", 1, GRAMMAR_RULE_WS);
   retval |= json_parser_parse((const uint8_t*)"\t", 1, GRAMMAR_RULE_WS);
 
-  //retval |= json_parser_parse((const uint8_t*)"\t\n", 2);
-  //retval |= json_parser_parse((const uint8_t*)"\t \r", 3);
-  //retval |= json_parser_parse((const uint8_t*)" \t ", 3);
-  //retval |= json_parser_parse((const uint8_t*)"\r\n \r\n ", 6);
   return retval;
 }
 
@@ -258,15 +206,19 @@ static int test_json_literals()
 
 static int test_json_number() {
   int retval = 0;
+
   retval |= json_parser_parse((const uint8_t*)"1", 1, GRAMMAR_RULE_JSON_NUMBER);
   retval |= json_parser_parse((const uint8_t*)"1234", 4, GRAMMAR_RULE_JSON_NUMBER);
   retval |= json_parser_parse((const uint8_t*)"-0.1234", 7, GRAMMAR_RULE_JSON_NUMBER);
   retval |= json_parser_parse((const uint8_t*)"98.8764e+2", 10, GRAMMAR_RULE_JSON_NUMBER);
+  retval |= json_parser_parse((const uint8_t*)"21.04321e-30", 12, GRAMMAR_RULE_JSON_NUMBER);
+  retval |= json_parser_parse((const uint8_t*)"-0.2468e+5", 10, GRAMMAR_RULE_JSON_NUMBER);
 
   return retval;
 }
 
-static int test_json_basic_fails() {
+static int test_json_basic_fails()
+{
   int retval = 0;
 
   FAIL_ON_PASS(json_parser_parse((const uint8_t*)"X", 1, STACK_INVALID_DATA));
@@ -275,6 +227,47 @@ static int test_json_basic_fails() {
   FAIL_ON_PASS(json_parser_parse((const uint8_t*)":null:", 1, STACK_INVALID_DATA));
   FAIL_ON_PASS(json_parser_parse((const uint8_t*)"-.4", 1, STACK_INVALID_DATA));
   FAIL_ON_PASS(json_parser_parse((const uint8_t*)"098", 1, STACK_INVALID_DATA));
+
+  return retval;
+}
+
+static int test_json_escapes() 
+{
+  int retval = 0;
+
+  retval |= json_parser_parse((const uint8_t*)"\\\"", 2, GRAMMAR_RULE_ESC_QUOTE);
+  retval |= json_parser_parse((const uint8_t*)"\\\\", 2, GRAMMAR_RULE_ESC_BACKSLASH);
+  retval |= json_parser_parse((const uint8_t*)"\\/", 2, GRAMMAR_RULE_ESC_SLASH);
+  retval |= json_parser_parse((const uint8_t*)"\\b", 2, GRAMMAR_RULE_ESC_BACKSPACE);
+  retval |= json_parser_parse((const uint8_t*)"\\f", 2, GRAMMAR_RULE_ESC_FF);
+  retval |= json_parser_parse((const uint8_t*)"\\n", 2, GRAMMAR_RULE_ESC_LF);
+  retval |= json_parser_parse((const uint8_t*)"\\r", 2, GRAMMAR_RULE_ESC_CR);
+  retval |= json_parser_parse((const uint8_t*)"\\t", 2, GRAMMAR_RULE_ESC_TAB);
+
+  return retval;
+}
+
+static int test_json_string() {
+  int retval = 0;
+
+  retval |= json_parser_parse((const uint8_t*)"\"\"", 2, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\"String\"", 8, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\"String\\rwith control chars\"", 28, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\"String\\r\\nwith control chars\"", 30, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\"98.8764e+2\"", 12, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\"true\"", 6, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\"null\"", 6, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\" [ \"", 5, GRAMMAR_RULE_JSON_STRING);
+  retval |= json_parser_parse((const uint8_t*)"\" } \"", 5, GRAMMAR_RULE_JSON_STRING);
+
+  return retval;
+}
+
+static int test_json_string_fails()
+{
+  int retval = 0;
+
+  FAIL_ON_PASS(json_parser_parse((const uint8_t*)"\"", 1, STACK_INVALID_DATA));
 
   return retval;
 }
@@ -289,7 +282,11 @@ int register_json_tests() {
 
   int retval = test_json_basic_fails();
   
-  //FAIL_ON_FAIL(test_json_string());
+  FAIL_ON_FAIL(test_json_escapes());
+  FAIL_ON_FAIL(test_json_string());
+
+  retval |= test_json_string_fails();
+  
   //FAIL_ON_FAIL(test_json_object());
   //FAIL_ON_FAIL(test_json_array());
   //FAIL_ON_PASS(test_json_fail());

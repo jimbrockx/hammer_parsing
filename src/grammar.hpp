@@ -29,7 +29,7 @@ typedef enum rule_type_e
 } rule_type_t;
 
 
-#define MAX_RULE_BUFFER_LEN     16
+#define MAX_RULE_BUFFER_LEN     34
 
 typedef struct __attribute__((__packed__)) rule_ref_s
 {

@@ -2,55 +2,59 @@
 #include "grammar.hpp"
 
 // Simple rules
-#define GRAMMAR_RULE_WS               (0x1 << 0)
-#define GRAMMAR_RULE_LEFTSQUARE       (0x1 << 1)
-#define GRAMMAR_RULE_LEFTSQUARE_SEQ   (0x1 << 2)
-#define GRAMMAR_RULE_RIGHTSQUARE      (0x1 << 3)
-#define GRAMMAR_RULE_RIGHTSQUARE_SEQ  (0x1 << 4)
-#define GRAMMAR_RULE_LEFTCURLY        (0x1 << 5)
-#define GRAMMAR_RULE_LEFTCURLY_SEQ    (0x1 << 6)
-#define GRAMMAR_RULE_RIGHTCURLY       (0x1 << 7)
-#define GRAMMAR_RULE_RIGHTCURLY_SEQ   (0x1 << 8)
-#define GRAMMAR_RULE_COLON            (0x1 << 9)
-#define GRAMMAR_RULE_COLON_SEQ        (0x1 << 10)
-#define GRAMMAR_RULE_COMMA            (0x1 << 11)
-#define GRAMMAR_RULE_COMMA_SEQ        (0x1 << 12)
-#define GRAMMAR_RULE_LIT_TRUE         (0x1 << 13)
-#define GRAMMAR_RULE_LIT_FALSE        (0x1 << 14)
-#define GRAMMAR_RULE_LIT_NULL         (0x1 << 15)
-#define GRAMMAR_RULE_MINUS            (0x1 << 16)
-#define GRAMMAR_RULE_DOT              (0x1 << 17)
-#define GRAMMAR_RULE_DIGIT            (0x1 << 18)
-#define GRAMMAR_RULE_NON_ZERO_DIGIT   (0x1 << 19)
-#define GRAMMAR_RULE_ZERO             (0x1 << 20)
-#define GRAMMAR_RULE_LOWERE           (0x1 << 21)
-#define GRAMMAR_RULE_UPPERE           (0x1 << 22)
-#define GRAMMAR_RULE_EXP              (0x1 << 23)
-#define GRAMMAR_RULE_PLUS             (0x1 << 24)
-#define GRAMMAR_RULE_WHOLENUM_SEQ     (0x1 << 25)
-#define GRAMMAR_RULE_WHOLENUM         (0x1 << 26)
-#define GRAMMAR_RULE_DECIMAL_SEQ      (0x1 << 27)
-#define GRAMMAR_RULE_EXP_SIGN         (0x1 << 28)
-#define GRAMMAR_RULE_EXP_SEQ          (0x1 << 29)
-#define GRAMMAR_RULE_JSON_NUMBER      (0x1 << 30)
-
-
-//#define GRAMMAR_RULE_QUOTE            (0x1 << 17)
-//#define GRAMMAR_RULE_BACKSLASH        (0x1 << 18)
-//#define GRAMMAR_RULE_ESC_QUOTE        (0x1 << 19)
-//#define GRAMMAR_RULE_ESC_BACKSLASH    (0x1 << 20)
-//#define GRAMMAR_RULE_ESC_SLASH        (0x1 << 21)
-//#define GRAMMAR_RULE_ESC_BACKSPACE    (0x1 << 22)
-//#define GRAMMAR_RULE_ESC_FF           (0x1 << 23)
-//#define GRAMMAR_RULE_ESC_LF           (0x1 << 24)
-//#define GRAMMAR_RULE_ESC_CR           (0x1 << 25)
-//#define GRAMMAR_RULE_ESC_TAB          (0x1 << 26)
-//#define GRAMMAR_RULE_ESCAPED          (0x1 << 27)
-//#define GRAMMAR_RULE_UNESCAPED        (0x1 << 28)
+#define GRAMMAR_RULE_WS               (0x1ULL << 0)
+#define GRAMMAR_RULE_LEFTSQUARE       (0x1ULL << 1)
+#define GRAMMAR_RULE_LEFTSQUARE_SEQ   (0x1ULL << 2)
+#define GRAMMAR_RULE_RIGHTSQUARE      (0x1ULL << 3)
+#define GRAMMAR_RULE_RIGHTSQUARE_SEQ  (0x1ULL << 4)
+#define GRAMMAR_RULE_LEFTCURLY        (0x1ULL << 5)
+#define GRAMMAR_RULE_LEFTCURLY_SEQ    (0x1ULL << 6)
+#define GRAMMAR_RULE_RIGHTCURLY       (0x1ULL << 7)
+#define GRAMMAR_RULE_RIGHTCURLY_SEQ   (0x1ULL << 8)
+#define GRAMMAR_RULE_COLON            (0x1ULL << 9)
+#define GRAMMAR_RULE_COLON_SEQ        (0x1ULL << 10)
+#define GRAMMAR_RULE_COMMA            (0x1ULL << 11)
+#define GRAMMAR_RULE_COMMA_SEQ        (0x1ULL << 12)
+#define GRAMMAR_RULE_LIT_TRUE         (0x1ULL << 13)
+#define GRAMMAR_RULE_LIT_FALSE        (0x1ULL << 14)
+#define GRAMMAR_RULE_LIT_NULL         (0x1ULL << 15)
+#define GRAMMAR_RULE_MINUS            (0x1ULL << 16)
+#define GRAMMAR_RULE_DOT              (0x1ULL << 17)
+#define GRAMMAR_RULE_DIGIT            (0x1ULL << 18)
+#define GRAMMAR_RULE_NON_ZERO_DIGIT   (0x1ULL << 19)
+#define GRAMMAR_RULE_ZERO             (0x1ULL << 20)
+#define GRAMMAR_RULE_LOWERE           (0x1ULL << 21)
+#define GRAMMAR_RULE_UPPERE           (0x1ULL << 22)
+#define GRAMMAR_RULE_EXP              (0x1ULL << 23)
+#define GRAMMAR_RULE_PLUS             (0x1ULL << 24)
+#define GRAMMAR_RULE_WHOLENUM_SEQ     (0x1ULL << 25)
+#define GRAMMAR_RULE_WHOLENUM         (0x1ULL << 26)
+#define GRAMMAR_RULE_DECIMAL_SEQ      (0x1ULL << 27)
+#define GRAMMAR_RULE_EXP_SIGN         (0x1ULL << 28)
+#define GRAMMAR_RULE_EXP_SEQ          (0x1ULL << 29)
+#define GRAMMAR_RULE_JSON_NUMBER      (0x1ULL << 30)
+#define GRAMMAR_RULE_QUOTE            (0x1ULL << 31)
+#define GRAMMAR_RULE_BACKSLASH        (0x1ULL << 32)
+#define GRAMMAR_RULE_SLASH            (0x1ULL << 33)
+#define GRAMMAR_RULE_BACKSPACE        (0x1ULL << 34)
+#define GRAMMAR_RULE_FF               (0x1ULL << 35)
+#define GRAMMAR_RULE_LF               (0x1ULL << 36)
+#define GRAMMAR_RULE_CR               (0x1ULL << 37)
+#define GRAMMAR_RULE_TAB              (0x1ULL << 38)
+#define GRAMMAR_RULE_ESC_QUOTE        (0x1ULL << 39)
+#define GRAMMAR_RULE_ESC_BACKSLASH    (0x1ULL << 40)
+#define GRAMMAR_RULE_ESC_SLASH        (0x1ULL << 41)
+#define GRAMMAR_RULE_ESC_BACKSPACE    (0x1ULL << 42)
+#define GRAMMAR_RULE_ESC_FF           (0x1ULL << 43)
+#define GRAMMAR_RULE_ESC_LF           (0x1ULL << 44)
+#define GRAMMAR_RULE_ESC_CR           (0x1ULL << 45)
+#define GRAMMAR_RULE_ESC_TAB          (0x1ULL << 46)
+#define GRAMMAR_RULE_ESCAPED          (0x1ULL << 47)
+#define GRAMMAR_RULE_UNESCAPED        (0x1ULL << 48)
+#define GRAMMAR_RULE_JSON_CHAR        (0x1ULL << 49)
+#define GRAMMAR_RULE_JSON_STRING      (0x1ULL << 50)
 
 // Complex Rules 
-//#define GRAMMAR_RULE_JSON_CHAR        (0x1 << 30)
-//#define GRAMMAR_RULE_JSON_STRING      (0x1 << 31)
 //#define GRAMMAR_RULE_JSON_ARRAY       (0x1 << 32)
 //#define GRAMMAR_RULE_JSON_NV_PAIR     (0x1 << 33)
 //#define GRAMMAR_RULE_JSON_OBJECT      (0x1 << 34)
@@ -554,28 +558,366 @@ static rule_t global_grammar[MAX_GRAMMAR_DEPTH] =
         .min = 0
       }
     }
+  },
+  //31, H_RULE(quote, h_ch('"'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_QUOTE, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { '\"' }
+  },
+  //32, H_RULE(backslash, h_ch('\\'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_BACKSLASH, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { '\\' }
+  },
+  //33, H_RULE(slash, h_ch('/'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_SLASH, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { '/' }
+  },
+  //34, H_RULE(backspace, h_ch('b'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_BACKSPACE, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { 'b' }
+  },
+  //35, H_RULE(backspace, h_ch('f'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_FF, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { 'f' }
+  },
+  //36, H_RULE(backspace, h_ch('n'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_LF, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { 'n' }
+  },
+  //37, H_RULE(backspace, h_ch('r'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_CR, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { 'r' }
+  },
+  //38, H_RULE(backspace, h_ch(' t'));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_TAB, 0x0},
+    .len = 1,
+    .in_or_not = true,
+    .data = { 't' }
+  },
+  //39, H_RULE(esc_quote, h_sequence_1(backslash, quote)); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_QUOTE, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_QUOTE,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //40, H_RULE(esc_backslash, h_sequence_1(backslash, backslash)); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_BACKSLASH, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //41, H_RULE(esc_slash, h_sequence_1(backslash, h_ch('/'))); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_SLASH, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_SLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //42, H_RULE(esc_backspace, h_sequence_1(backslash, h_ch('b'))); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_BACKSPACE, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSPACE,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //43, H_RULE(esc_ff, h_sequence_1(backslash, h_ch('f'))); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_FF, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_FF,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //44, H_RULE(esc_lf, h_sequence_1(backslash, h_ch('n'))); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_LF, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_LF,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //45, H_RULE(esc_cr, h_sequence_1(backslash, h_ch('r'))); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_CR, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_CR,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //46, H_RULE(esc_tab, h_sequence_1(backslash, h_ch('t'))); //, NULL));
+  {
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_ESC_TAB, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_TAB,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //47, H_RULE(escaped, h_choice_8(esc_quote, esc_backslash, esc_slash, esc_backspace,
+  //                           esc_ff, esc_lf, esc_cr, esc_tab)); //, NULL));
+  {
+    .type = RULE_TYPE_CHOICE,
+    .value = {GRAMMAR_RULE_ESCAPED, 0x0},
+    .len = 8,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_ESC_QUOTE,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_SLASH,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_BACKSPACE,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_FF,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_CR,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_LF,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_TAB,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //48, H_RULE(unescaped, h_not_in((uint8_t*)"\"\\\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F", 34));
+  {
+    .type = RULE_TYPE_CHARSET,
+    .value = {GRAMMAR_RULE_UNESCAPED, 0x0},
+    .len = 34,
+    .in_or_not = false,
+    .data = { '\"', '\\', '\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', '\x08', '\x09', '\x0A', '\x0B', '\x0C', '\x0D', '\x0E', '\x0F', '\x10', '\x11', '\x12', '\x13', '\x14', '\x15', '\x16', '\x17', '\x18', '\x19', '\x1A', '\x1B', '\x1C', '\x1D', '\x1E', '\x1F' }
+  },
+  //49, H_RULE(json_char, h_choice_2(escaped, unescaped)); //, NULL));
+  {
+    .type = RULE_TYPE_CHOICE,
+    .value = {GRAMMAR_RULE_JSON_CHAR, 0x0},
+    .len = 2,
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_ESCAPED,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_UNESCAPED,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
+  },
+  //50, H_ARULE(json_string, h_middle(quote, h_many(json_char), quote));
+  { 
+    .type = RULE_TYPE_SEQUENCE,
+    .value = {GRAMMAR_RULE_JSON_STRING, 0x0},
+    .len = 3, 
+    .in_or_not = true,
+    .data = {},
+    .refs = {
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_QUOTE,
+        .optional = false,
+        .many = false,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_JSON_CHAR,
+        .optional = true,
+        .many = true,
+        .min = 0
+      },
+      (rule_ref_t){
+        .token = GRAMMAR_RULE_QUOTE,
+        .optional = false,
+        .many = false,
+        .min = 0
+      }
+    }
   }
 
-
 /*
-    // Strings
-    H_RULE(quote, h_ch('"'));
-    H_RULE(backslash, h_ch('\\'));
-    H_RULE(esc_quote, h_sequence_1(backslash, quote)); //, NULL));
-    H_RULE(esc_backslash, h_sequence_1(backslash, backslash)); //, NULL));
-    H_RULE(esc_slash, h_sequence_1(backslash, h_ch('/'))); //, NULL));
-    H_RULE(esc_backspace, h_sequence_1(backslash, h_ch('b'))); //, NULL));
-    H_RULE(esc_ff, h_sequence_1(backslash, h_ch('f'))); //, NULL));
-    H_RULE(esc_lf, h_sequence_1(backslash, h_ch('n'))); //, NULL));
-    H_RULE(esc_cr, h_sequence_1(backslash, h_ch('r'))); //, NULL));
-    H_RULE(esc_tab, h_sequence_1(backslash, h_ch('t'))); //, NULL));
-    H_RULE(escaped, h_choice_8(esc_quote, esc_backslash, esc_slash, esc_backspace,
-                             esc_ff, esc_lf, esc_cr, esc_tab)); //, NULL));
-    H_RULE(unescaped, h_not_in((uint8_t*)"\"\\\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1D\x1E\x1F", 34));
-    H_RULE(json_char, h_choice_2(escaped, unescaped)); //, NULL));
-
-    H_ARULE(json_string, h_middle(quote, h_many(json_char), quote));
-
     // Arrays
     H_ARULE(json_array, h_middle(left_square_bracket,
                                  h_sepBy(value, comma),
